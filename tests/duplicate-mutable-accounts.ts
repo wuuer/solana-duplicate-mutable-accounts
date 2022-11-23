@@ -35,39 +35,4 @@ describe("duplicate-mutable-accounts", () => {
       .signers([playerTwo])
       .rpc()
   })
-
-  it("Invoke insecure instruction", async () => {
-    await program.methods
-      .insecureStartGame()
-      .accounts({
-        playerOne: playerOne.publicKey,
-        playerTwo: playerOne.publicKey,
-      })
-      .rpc()
-  })
-
-  it("Invoke secure instruction, expect error", async () => {
-    try {
-      await program.methods
-        .secureStartGame()
-        .accounts({
-          playerOne: playerOne.publicKey,
-          playerTwo: playerOne.publicKey,
-        })
-        .rpc()
-    } catch (err) {
-      expect(err)
-      console.log(err)
-    }
-  })
-
-  it("Invoke secure instruction", async () => {
-    await program.methods
-      .secureStartGame()
-      .accounts({
-        playerOne: playerOne.publicKey,
-        playerTwo: playerTwo.publicKey,
-      })
-      .rpc()
-  })
 })

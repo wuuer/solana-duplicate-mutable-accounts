@@ -20,15 +20,6 @@ pub mod duplicate_mutable_accounts {
             ctx.accounts.player_two.games_played.checked_add(1).unwrap();
         Ok(())
     }
-
-    pub fn secure_start_game(ctx: Context<SecureGameStart>) -> Result<()> {
-        ctx.accounts.player_one.games_played =
-            ctx.accounts.player_one.games_played.checked_add(1).unwrap();
-
-        ctx.accounts.player_two.games_played =
-            ctx.accounts.player_two.games_played.checked_add(1).unwrap();
-        Ok(())
-    }
 }
 
 #[derive(Accounts)]
@@ -47,16 +38,6 @@ pub struct Initialize<'info> {
 #[derive(Accounts)]
 pub struct InsecureGameStart<'info> {
     #[account(mut)]
-    pub player_one: Account<'info, PlayerState>,
-    #[account(mut)]
-    pub player_two: Account<'info, PlayerState>,
-}
-
-#[derive(Accounts)]
-pub struct SecureGameStart<'info> {
-    #[account(
-        mut,
-        constraint = player_one.key() != player_two.key())]
     pub player_one: Account<'info, PlayerState>,
     #[account(mut)]
     pub player_two: Account<'info, PlayerState>,
