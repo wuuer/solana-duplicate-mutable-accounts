@@ -35,4 +35,18 @@ describe("duplicate-mutable-accounts", () => {
       .signers([playerTwo])
       .rpc()
   })
+
+  it("Invoke insecure instruction, expect wrong `games_played` count", async () => {
+    await program.methods
+      .rockPaperScissorsShootInsecure({ rock: {} }, { scissors: {} })
+      .accounts({
+        playerOne: playerOne.publicKey,
+        playerTwo: playerOne.publicKey,
+      })
+      .rpc()
+
+    const p1 = await program.account.playerState.fetch(playerOne.publicKey)
+
+    expect(p1.choice.Scissors).to.equal({ scissors: {} })
+  })
 })
