@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("ER5gAw3A2wD572K6vdbFcvcq8ATwGXiKai96iNfZnEJV");
 
 #[program]
 pub mod duplicate_mutable_accounts {
