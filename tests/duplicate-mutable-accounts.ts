@@ -1,6 +1,6 @@
 import * as anchor from "@project-serum/anchor"
 import { Program } from "@project-serum/anchor"
-import { expect } from "chai"
+import { assert, expect } from "chai"
 import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts"
 
 describe("duplicate-mutable-accounts", () => {
@@ -36,7 +36,7 @@ describe("duplicate-mutable-accounts", () => {
       .rpc()
   })
 
-  it("Invoke insecure instruction, expect wrong `games_played` count", async () => {
+  it("Invoke insecure instruction", async () => {
     await program.methods
       .rockPaperScissorsShootInsecure({ rock: {} }, { scissors: {} })
       .accounts({
@@ -46,7 +46,7 @@ describe("duplicate-mutable-accounts", () => {
       .rpc()
 
     const p1 = await program.account.playerState.fetch(playerOne.publicKey)
-
-    expect(p1.choice.Scissors).to.equal({ scissors: {} })
+    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ scissors: {} }))
+    assert.notEqual(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }))
   })
 })

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use borsh::{BorshDeserialize, BorshSerialize};
 
-declare_id!("ER5gAw3A2wD572K6vdbFcvcq8ATwGXiKai96iNfZnEJV");
+declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
 pub mod duplicate_mutable_accounts {
@@ -15,17 +15,6 @@ pub mod duplicate_mutable_accounts {
 
     pub fn rock_paper_scissors_shoot_insecure(
         ctx: Context<RockPaperScissorsInsecure>,
-        player_one_choice: RockPaperScissors,
-        player_two_choice: RockPaperScissors,
-    ) -> Result<()> {
-        ctx.accounts.player_one.choice = Some(player_one_choice);
-
-        ctx.accounts.player_two.choice = Some(player_two_choice);
-        Ok(())
-    }
-
-    pub fn rock_paper_scissors_shoot_secure(
-        ctx: Context<RockPaperScissorsSecure>,
         player_one_choice: RockPaperScissors,
         player_two_choice: RockPaperScissors,
     ) -> Result<()> {
@@ -55,19 +44,6 @@ pub struct RockPaperScissorsInsecure<'info> {
     pub player_one: Account<'info, PlayerState>,
     #[account(mut)]
     pub player_two: Account<'info, PlayerState>,
-}
-
-#[derive(Accounts)]
-pub struct RockPaperScissorsSecure<'info> {
-    #[account(
-        mut, 
-        constraint = player_one.key() != player_two.key()
-    )]
-    pub player_one: Account<'info, PlayerState>,
-    #[account(
-        mut
-    )]
-    pub player_two: Account<'info, PlayerState>
 }
 
 #[account]
