@@ -1,6 +1,6 @@
 import * as anchor from "@project-serum/anchor"
 import { Program } from "@project-serum/anchor"
-import { expect } from "chai"
+import { assert, expect } from "chai"
 import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts"
 
 describe("duplicate-mutable-accounts", () => {
@@ -34,5 +34,49 @@ describe("duplicate-mutable-accounts", () => {
       })
       .signers([playerTwo])
       .rpc()
+  })
+
+  it("Invoke insecure instruction", async () => {
+    await program.methods
+      .rockPaperScissorsShootInsecure({ rock: {} }, { scissors: {} })
+      .accounts({
+        playerOne: playerOne.publicKey,
+        playerTwo: playerOne.publicKey,
+      })
+      .rpc()
+
+    const p1 = await program.account.playerState.fetch(playerOne.publicKey)
+    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ scissors: {} }))
+    assert.notEqual(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }))
+  })
+
+  it("Invoke secure instruction", async () => {
+    await program.methods
+      .rockPaperScissorsShootSecure({ rock: {} }, { scissors: {} })
+      .accounts({
+        playerOne: playerOne.publicKey,
+        playerTwo: playerTwo.publicKey,
+      })
+      .rpc()
+
+    const p1 = await program.account.playerState.fetch(playerOne.publicKey)
+    const p2 = await program.account.playerState.fetch(playerTwo.publicKey)
+    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }))
+    assert.equal(JSON.stringify(p2.choice), JSON.stringify({ scissors: {} }))
+  })
+
+  it("Invoke secure instruction - expect error", async () => {
+    try {
+      await program.methods
+        .rockPaperScissorsShootSecure({ rock: {} }, { scissors: {} })
+        .accounts({
+          playerOne: playerOne.publicKey,
+          playerTwo: playerOne.publicKey,
+        })
+        .rpc()
+    } catch (err) {
+      expect(err)
+      console.log(err)
+    }
   })
 })
