@@ -1,18 +1,18 @@
-import * as anchor from "@project-serum/anchor"
-import { Program } from "@project-serum/anchor"
-import { assert, expect } from "chai"
-import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts"
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import { assert, expect } from "chai";
+import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts";
 
 describe("duplicate-mutable-accounts", () => {
   // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
 
   const program = anchor.workspace
-    .DuplicateMutableAccounts as Program<DuplicateMutableAccounts>
+    .DuplicateMutableAccounts as Program<DuplicateMutableAccounts>;
 
-  const playerOne = anchor.web3.Keypair.generate()
-  const playerTwo = anchor.web3.Keypair.generate()
+  const playerOne = anchor.web3.Keypair.generate();
+  const playerTwo = anchor.web3.Keypair.generate();
 
   it("Initialized Player One", async () => {
     await program.methods
@@ -22,8 +22,8 @@ describe("duplicate-mutable-accounts", () => {
         payer: provider.wallet.publicKey,
       })
       .signers([playerOne])
-      .rpc()
-  })
+      .rpc();
+  });
 
   it("Initialized Player Two", async () => {
     await program.methods
@@ -33,8 +33,8 @@ describe("duplicate-mutable-accounts", () => {
         payer: provider.wallet.publicKey,
       })
       .signers([playerTwo])
-      .rpc()
-  })
+      .rpc();
+  });
 
   it("Invoke insecure instruction", async () => {
     await program.methods
@@ -43,12 +43,12 @@ describe("duplicate-mutable-accounts", () => {
         playerOne: playerOne.publicKey,
         playerTwo: playerOne.publicKey,
       })
-      .rpc()
+      .rpc();
 
-    const p1 = await program.account.playerState.fetch(playerOne.publicKey)
-    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ scissors: {} }))
-    assert.notEqual(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }))
-  })
+    const p1 = await program.account.playerState.fetch(playerOne.publicKey);
+    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ scissors: {} }));
+    assert.notEqual(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }));
+  });
 
   it("Invoke secure instruction", async () => {
     await program.methods
@@ -57,13 +57,13 @@ describe("duplicate-mutable-accounts", () => {
         playerOne: playerOne.publicKey,
         playerTwo: playerTwo.publicKey,
       })
-      .rpc()
+      .rpc();
 
-    const p1 = await program.account.playerState.fetch(playerOne.publicKey)
-    const p2 = await program.account.playerState.fetch(playerTwo.publicKey)
-    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }))
-    assert.equal(JSON.stringify(p2.choice), JSON.stringify({ scissors: {} }))
-  })
+    const p1 = await program.account.playerState.fetch(playerOne.publicKey);
+    const p2 = await program.account.playerState.fetch(playerTwo.publicKey);
+    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }));
+    assert.equal(JSON.stringify(p2.choice), JSON.stringify({ scissors: {} }));
+  });
 
   it("Invoke secure instruction - expect error", async () => {
     try {
@@ -73,10 +73,10 @@ describe("duplicate-mutable-accounts", () => {
           playerOne: playerOne.publicKey,
           playerTwo: playerOne.publicKey,
         })
-        .rpc()
+        .rpc();
     } catch (err) {
-      expect(err)
-      console.log(err)
+      expect(err);
+      console.log(err);
     }
-  })
-})
+  });
+});
