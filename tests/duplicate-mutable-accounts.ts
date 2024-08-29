@@ -1,5 +1,5 @@
-import * as anchor from "@project-serum/anchor"
-import { Program } from "@project-serum/anchor"
+import * as anchor from "@coral-xyz/anchor";
+import { Program} from "@coral-xyz/anchor";
 import { assert, expect } from "chai"
 import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts"
 
