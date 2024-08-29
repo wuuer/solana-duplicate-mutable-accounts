@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 mod constants;
 use constants::DISCRIMINATOR_SIZE;
 
-declare_id!("AjBhRphs24vC1V8zZM25PTuLJhJJXFnYbimsZF8jpJAS");
+declare_id!("Lo5sj2wWy4BHbe8kCSUvgdhzFbv9c6CEERfgAXusBj9");
 
 #[program]
 pub mod duplicate_mutable_accounts {
