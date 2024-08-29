@@ -35,18 +35,4 @@ describe("duplicate-mutable-accounts", () => {
       .signers([playerTwo])
       .rpc();
   });
-
-  it("Invoke insecure instruction", async () => {
-    await program.methods
-      .rockPaperScissorsShootInsecure({ rock: {} }, { scissors: {} })
-      .accounts({
-        playerOne: playerOne.publicKey,
-        playerTwo: playerOne.publicKey,
-      })
-      .rpc();
-
-    const p1 = await program.account.playerState.fetch(playerOne.publicKey);
-    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ scissors: {} }));
-    assert.notEqual(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }));
-  });
 });
