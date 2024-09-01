@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
-use borsh::{BorshDeserialize, BorshSerialize};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("CSp7FzR2rCzq4AHQcU57wJ4gxmFp8Q7CFHNziTdmQAZC");
+
+const DISCRIMINATOR_SIZE: usize = 8;
 
 #[program]
 pub mod duplicate_mutable_accounts {
@@ -23,17 +24,6 @@ pub mod duplicate_mutable_accounts {
         ctx.accounts.player_two.choice = Some(player_two_choice);
         Ok(())
     }
-
-    pub fn rock_paper_scissors_shoot_secure(
-        ctx: Context<RockPaperScissorsSecure>,
-        player_one_choice: RockPaperScissors,
-        player_two_choice: RockPaperScissors,
-    ) -> Result<()> {
-        ctx.accounts.player_one.choice = Some(player_one_choice);
-
-        ctx.accounts.player_two.choice = Some(player_two_choice);
-        Ok(())
-    }
 }
 
 #[derive(Accounts)]
@@ -41,7 +31,7 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = payer,
-        space = 8 + 32 + 8
+        space = DISCRIMINATOR_SIZE + PlayerState::INIT_SPACE
     )]
     pub new_player: Account<'info, PlayerState>,
     #[account(mut)]
@@ -57,24 +47,14 @@ pub struct RockPaperScissorsInsecure<'info> {
     pub player_two: Account<'info, PlayerState>,
 }
 
-#[derive(Accounts)]
-pub struct RockPaperScissorsSecure<'info> {
-    #[account(
-        mut,
-        constraint = player_one.key() != player_two.key()
-    )]
-    pub player_one: Account<'info, PlayerState>,
-    #[account(mut)]
-    pub player_two: Account<'info, PlayerState>,
-}
-
 #[account]
+#[derive(InitSpace)]
 pub struct PlayerState {
     player: Pubkey,
     choice: Option<RockPaperScissors>,
 }
 
-#[derive(Clone, Copy, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, Copy, AnchorDeserialize, AnchorSerialize, InitSpace)]
 pub enum RockPaperScissors {
     Rock,
     Paper,
