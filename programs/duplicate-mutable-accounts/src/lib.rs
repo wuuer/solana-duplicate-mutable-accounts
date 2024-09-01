@@ -24,6 +24,17 @@ pub mod duplicate_mutable_accounts {
         ctx.accounts.player_two.choice = Some(player_two_choice);
         Ok(())
     }
+
+    pub fn rock_paper_scissors_shoot_secure(
+        ctx: Context<RockPaperScissorsSecure>,
+        player_one_choice: RockPaperScissors,
+        player_two_choice: RockPaperScissors,
+    ) -> Result<()> {
+        ctx.accounts.player_one.choice = Some(player_one_choice);
+
+        ctx.accounts.player_two.choice = Some(player_two_choice);
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -42,6 +53,17 @@ pub struct Initialize<'info> {
 #[derive(Accounts)]
 pub struct RockPaperScissorsInsecure<'info> {
     #[account(mut)]
+    pub player_one: Account<'info, PlayerState>,
+    #[account(mut)]
+    pub player_two: Account<'info, PlayerState>,
+}
+
+#[derive(Accounts)]
+pub struct RockPaperScissorsSecure<'info> {
+    #[account(
+        mut,
+        constraint = player_one.key() != player_two.key()
+    )]
     pub player_one: Account<'info, PlayerState>,
     #[account(mut)]
     pub player_two: Account<'info, PlayerState>,
