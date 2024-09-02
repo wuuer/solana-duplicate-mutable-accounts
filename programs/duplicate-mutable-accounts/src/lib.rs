@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
+use borsh::{BorshDeserialize, BorshSerialize};
 
-declare_id!("CSp7FzR2rCzq4AHQcU57wJ4gxmFp8Q7CFHNziTdmQAZC");
 
-const DISCRIMINATOR_SIZE: usize = 8;
+declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
 pub mod duplicate_mutable_accounts {
@@ -53,6 +53,7 @@ pub struct PlayerState {
     player: Pubkey,
     choice: Option<RockPaperScissors>,
 }
+
 
 #[derive(Clone, Copy, AnchorDeserialize, AnchorSerialize, InitSpace)]
 pub enum RockPaperScissors {
