@@ -1,18 +1,18 @@
-import * as anchor from "@project-serum/anchor"
-import { Program } from "@project-serum/anchor"
-import { assert, expect } from "chai"
-import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts"
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import { assert, expect } from "chai";
+import { DuplicateMutableAccounts } from "../target/types/duplicate_mutable_accounts";
 
 describe("duplicate-mutable-accounts", () => {
   // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
 
   const program = anchor.workspace
-    .DuplicateMutableAccounts as Program<DuplicateMutableAccounts>
+    .DuplicateMutableAccounts as Program<DuplicateMutableAccounts>;
 
-  const playerOne = anchor.web3.Keypair.generate()
-  const playerTwo = anchor.web3.Keypair.generate()
+  const playerOne = anchor.web3.Keypair.generate();
+  const playerTwo = anchor.web3.Keypair.generate();
 
   it("Initialized Player One", async () => {
     await program.methods
@@ -22,8 +22,8 @@ describe("duplicate-mutable-accounts", () => {
         payer: provider.wallet.publicKey,
       })
       .signers([playerOne])
-      .rpc()
-  })
+      .rpc();
+  });
 
   it("Initialized Player Two", async () => {
     await program.methods
@@ -33,6 +33,6 @@ describe("duplicate-mutable-accounts", () => {
         payer: provider.wallet.publicKey,
       })
       .signers([playerTwo])
-      .rpc()
-  })
-})
+      .rpc();
+  });
+});
